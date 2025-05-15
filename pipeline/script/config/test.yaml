@@ -1,0 +1,29 @@
+outputFolder: output
+queries:
+  - name: managementGroups_csv_json_formats
+    file: landingZone/managementGroups.kql
+    extractType: [csv,json]
+    outputFilename: managementGroups_csv_json_formats
+  
+  - name: managementGroups_individualJson_only
+    file: landingZone/managementGroups.kql
+    extractType: [individualJson]
+    outputFilename: managementGroups_individualJson_only
+    
+  - name: managementGroups_with_zip_csv
+    file: landingZone/managementGroups.kql
+    extractType: [csv]
+    outputFilename: managementGroups_with_zip_csv
+    zipOutput: true
+    
+  - name: managementGroups_with_zip_json
+    file: landingZone/managementGroups.kql
+    extractType: [json]
+    outputFilename: managementGroups_with_zip_json
+    zipOutput: true
+    
+  - name: managementGroups_with_zip_individualJson
+    file: landingZone/managementGroups.kql
+    extractType: [individualJson]
+    outputFilename: managementGroups_with_zip_individualJson
+    zipOutput: true

@@ -1,0 +1,5 @@
+resourcecontainers 
+| where type == 'microsoft.management/managementgroups' 
+| extend parentDisplayName = properties.details.parent.displayName, parentName = properties.details.parent.name
+| project id, name, properties.displayName,parentDisplayName , parentName 
+

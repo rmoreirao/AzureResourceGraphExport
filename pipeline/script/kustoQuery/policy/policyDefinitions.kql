@@ -1,0 +1,24 @@
+policyresources
+| where type == 'microsoft.authorization/policydefinitions' or type == 'microsoft.authorization/policysetdefinitions'
+| extend 
+    Id = id,
+    Name = properties.displayName,
+    Type = case(type == 'microsoft.authorization/policydefinitions', 'Policy', 'Initiative'),
+    // Definition = properties.policyRule,
+    Location = properties.policyDefinitionId,
+    PolicyType = case(properties.policyType == 'BuiltIn', 'Built in', 'Custom'),
+    Category = properties.metadata.category,
+    AvailableEffects = properties.policyRule.then.effect,
+    Description = properties.description
+    // Parameters = tostring(properties.parameters)
+| project 
+    Id,
+    Name,
+    Type,
+    // Definition,
+    Location,
+    PolicyType,
+    Category,
+    AvailableEffects,
+    Description
+    // Parameters

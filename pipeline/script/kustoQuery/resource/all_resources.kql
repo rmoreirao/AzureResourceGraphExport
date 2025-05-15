@@ -1,0 +1,3 @@
+// All API Management Resources
+resources
+// | where type =~ 'microsoft.apimanagement/service'

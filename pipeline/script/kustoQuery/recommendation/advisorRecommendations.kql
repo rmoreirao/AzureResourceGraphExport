@@ -1,0 +1,23 @@
+AdvisorResources
+| where type =~ 'microsoft.advisor/recommendations'
+| extend 
+    category = tostring(properties.category), 
+    impact = tostring(properties.impact), 
+    problem = tostring(properties.shortDescription.problem),
+    annualSavingsAmount = tostring(properties.extendedProperties.annualSavingsAmount), 
+    savingsCurrency = tostring(properties.extendedProperties.savingsCurrency),
+    lookbackPeriod = tostring(properties.extendedProperties.lookbackPeriod), 
+    savingsTerm = tostring(properties.extendedProperties.term),
+    lastUpdated = tostring(properties.lastUpdated)
+// | where (category == 'Cost' and ((coalesce(lookbackPeriod,'7') == '7' and coalesce(savingsTerm,'P1Y') == 'P1Y')) ) or (category != 'Cost')
+| join kind=leftouter (
+    resourcecontainers
+    | where type == 'microsoft.resources/subscriptions'
+    | project subscriptionId, subscriptionName = name
+) on subscriptionId
+| project-away subscriptionId1 
+// | where category == 'Security'
+// | summarize count() by impact,category, problem
+// | summarize count() by category
+| order by category asc
+// | summarize count()

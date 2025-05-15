@@ -1,0 +1,34 @@
+trigger: none
+
+# Azure DevOps Pipeline to run the resource-graph export template
+parameters:
+  - name: configFileName
+    type: string
+    default: all_extracts.yaml
+  - name: specificQueryName
+    type: string
+    default: ' '
+
+variables:
+  - name: azureServiceConnectionName
+    value: 'azureServiceConnection' # This variable's value is derived from the pipeline variable group
+  - name: storageAccountName
+    value: 'stgtestrecomrmoreirao' # This variable's value is derived from the pipeline variable group
+  - name: containerName
+    value: 'resourcegraph' # This variable's value is derived from the pipeline variable group
+  - name: blobDestinationFolderName
+    value: $[format('{0:yyyyMMdd}-{1}', pipeline.startTime, variables['Build.BuildId'])] # Format: yyyyddmm-BuildId
+
+
+stages:
+- stage: RunExportTemplate
+  displayName: 'Run Resource Graph Export Template'
+  jobs:
+  - template: pipeline.resource-graph.export.config.template.yml
+    parameters:
+      configFileName: ${{ parameters.configFileName }}
+      specificQueryName: ${{ parameters.specificQueryName }}
+      azureServiceConnectionName: $(azureServiceConnectionName)
+      storageAccountName: '$(storageAccountName)' # This variable's value is derived from the pipeline variable group
+      containerName: '$(containerName)' # This variable's value is derived from the pipeline variable group
+      blobDestinationFolderName: '$(blobDestinationFolderName)' # This variable's value is derived from the pipeline variable group

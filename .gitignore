@@ -1,0 +1,33 @@
+# Ignore output and export folders
+output/
+*.csv
+*.json
+*_json/
+
+# Ignore PowerShell module cache
+Modules/
+
+# Ignore VSCode settings and workspace files
+.vscode/
+*.code-workspace
+
+# Ignore Python cache if any
+__pycache__/
+*.pyc
+
+# Ignore node_modules if any
+node_modules/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log
+
+# Ignore secrets/configs
+*.secrets
+*.env
+
+# Ignore YAML config output if generated
+*.yaml.bak

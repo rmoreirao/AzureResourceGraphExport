@@ -1,0 +1,36 @@
+outputFolder: output
+queries:
+  - name: policyAssignments
+    file: policy/policyAssignments.kql
+    extractType: [csv]
+    outputFilename: policyAssignments
+    zipOutput: true
+  - name: initiativePolicies
+    file: policy/initiativePolicies.kql
+    extractType: [csv]
+    outputFilename: initiativePolicies
+    zipOutput: true
+  - name: policyAssignmentCompliancyState.kql
+    file: policy/policyAssignmentCompliancyState.kql
+    extractType: [csv]
+    outputFilename: policyAssignmentCompliancyState
+    zipOutput: true
+  - name: policyDefinitions
+    file: policy/policyDefinitions.kql
+    extractType: [json]
+    outputFilename: policyDefinitions
+    zipOutput: true
+  - name: advisorRecommendations
+    file: recommendation/advisorRecommendations.kql
+    extractType: [csv]
+    outputFilename: advisorRecommendations
+    zipOutput: true
+  - name: managementGroups
+    file: landingZone/managementGroups.kql
+    extractType: [csv,json]
+    outputFilename: managementGroups
+  - name: all_resources
+    file: resource/all_resources.kql
+    extractType: [individualJson]
+    outputFilename: all_resources
+    zipOutput: true

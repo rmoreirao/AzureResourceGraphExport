@@ -1,0 +1,57 @@
+# Azure DevOps Pipeline to run the resource-graph export template
+parameters:
+  - name: configFileName
+    type: string
+  - name: azureServiceConnectionName
+    type: string
+  - name: specificQueryName 
+    type: string
+  - name: storageAccountName
+    type: string
+  - name: containerName
+    type: string
+  - name: blobDestinationFolderName
+    type: string
+
+
+jobs:
+- job: ExportAndUpload
+  displayName: 'Export and Upload Resource Graph Data'
+  continueOnError: true
+
+  steps:
+    - script: |
+        echo configFileName: ${{ parameters.configFileName }}
+        echo azureServiceConnectionName: ${{ parameters.azureServiceConnectionName }}
+        echo specificQueryName: ${{ parameters.specificQueryName }}
+        echo storageAccountName: ${{ parameters.storageAccountName }}
+        echo containerName: ${{ parameters.containerName }}
+        echo blobDestinationFolderName: ${{ parameters.blobDestinationFolderName }}
+      displayName: 'Display Parameters'
+
+    - task: AzurePowerShell@5
+      displayName: 'Export Resource Graph From Config'
+      inputs:
+        azureSubscription: '${{ parameters.azureServiceConnectionName }}'
+        ScriptType: 'FilePath'
+        ScriptPath: '$(Build.SourcesDirectory)/pipeline/script/ExportResourceGraphFromConfig.ps1'
+        ScriptArguments: '-ConfigFileName ${{ parameters.configFileName }} -QueryName "${{ parameters.specificQueryName }}"'
+        azurePowerShellVersion: 'LatestVersion'
+        pwsh: true
+
+    - task: AzurePowerShell@5
+      displayName: 'Export Output To Azure Blob Storage'
+      inputs:
+        azureSubscription: '${{ parameters.azureServiceConnectionName }}'
+        ScriptType: 'FilePath'
+        ScriptPath: '$(Build.SourcesDirectory)/pipeline/script/ExportOutputToAzureBlobStorage.ps1'
+        ScriptArguments: '-Path $(System.DefaultWorkingDirectory)/output -StorageAccountName ${{ parameters.storageAccountName }} -ContainerName ${{ parameters.containerName }} -BlobDestinationFolderName ${{ parameters.blobDestinationFolderName }}'
+        azurePowerShellVersion: 'LatestVersion'
+        pwsh: true
+
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish output folder as pipeline artifact'
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)/output'
+        artifact: 'resource-graph-output'
+        publishLocation: 'pipeline'

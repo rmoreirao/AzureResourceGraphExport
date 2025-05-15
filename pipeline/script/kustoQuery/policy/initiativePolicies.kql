@@ -1,0 +1,13 @@
+policyresources
+| where type == 'microsoft.authorization/policysetdefinitions'
+| extend InitiativeName = properties.displayName
+| mv-expand policies = properties.policyDefinitions
+| extend PolicyId = tostring(policies.policyDefinitionId)
+| project InitiativeName, PolicyId, InitiativeId = id
+| join kind=inner (
+    policyresources
+    | where type == 'microsoft.authorization/policydefinitions'
+    | extend PolicyId = tostring(id)
+    | project PolicyId, PolicyName = properties.displayName
+) on PolicyId
+| project InitiativeId,InitiativeName, PolicyName, PolicyId
